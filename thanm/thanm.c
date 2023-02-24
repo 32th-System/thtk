@@ -1101,6 +1101,7 @@ anm_read_file(
                     }
                     thanm_instr_t* thanm_instr = thanm_instr_new_raw(instr, format);
                     thanm_instr->offset = (uint32_t)((ptrdiff_t)instr_ptr - (ptrdiff_t)(map + script->offset->offset));
+                    thanm_instr->address = instr_ptr;
                     list_append_new(&script->instrs, thanm_instr);
 
                     if (header->version == 0)
@@ -1162,7 +1163,11 @@ anm_stringify_instr(
         }
     }
 
-    fprintf(stream, ");\n");
+    fprintf(stream, ");");
+
+    fprintf(stream, " /* %5x (+%5x)*/", instr->address, instr->offset);
+
+    fputc('\n', stream);
 }
 
 static void
